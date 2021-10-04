@@ -45,7 +45,6 @@ const Main = (props) => {
               ) : (
                 <img src='/images/user.svg' alt='user' />
               )}
-              {/* <img src='/images/user.svg' alt='user' /> */}
               <button
                 onClick={handleClick}
                 disabled={props.loading ? true : false}
