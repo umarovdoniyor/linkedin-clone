@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PostModal from './PostModal';
 import { getArticlesAPI } from '../actions';
+import ReactPlayer from 'react-player';
 
 const Main = (props) => {
   const [showModal, setShowModal] = useState('close');
@@ -76,69 +77,82 @@ const Main = (props) => {
               <img src='/images/spin-loader.gif' alt='spin-loader' />
             )}
 
-            <Article>
-              <SharedActor>
-                <a>
-                  <img src='/images/user.svg' alt='user' />
-                  <div>
-                    <span>Title</span>
-                    <span>Info</span>
-                    <span>Date</span>
-                  </div>
-                </a>
-                <button>
-                  <img src='/images/ellipsis.svg' alt='ellipsis' />
-                </button>
-              </SharedActor>
-              <Description>Description </Description>
-              <SharedImg>
-                <a>
-                  <img src='/images/shared-image.jpg' alt='shared-image' />
-                </a>
-              </SharedImg>
-              <SocialCounts>
-                <li>
-                  <button>
-                    <img
-                      src='https://static-exp1.licdn.com/sc/h/8ekq8gho1ruaf8i7f86vd1ftt'
-                      alt='LIKE'
-                    />
+            {props.articles.length > 0 &&
+              props.articles.map((article, key) => (
+                <Article key={key}>
+                  <SharedActor>
+                    <a>
+                      <img src={article.actor.image} alt='user' />
+                      <div>
+                        <span>{article.actor.title}</span>
+                        <span>{article.actor.description}</span>
+                        <span>
+                          {article.actor.date.toDate().toLocaleDateString()}
+                        </span>
+                      </div>
+                    </a>
+                    <button>
+                      <img src='/images/ellipsis.svg' alt='ellipsis' />
+                    </button>
+                  </SharedActor>
+                  <Description>{article.description}</Description>
+                  <SharedImg>
+                    <a>
+                      {!article.sharedImg && article.video ? (
+                        <ReactPlayer width={'100%'} url={article.video} />
+                      ) : (
+                        article.sharedImg && <img src={article.sharedImg} />
+                      )}
+                      {/* <img src='/images/shared-image.jpg' alt='shared-image' /> */}
+                    </a>
+                  </SharedImg>
+                  <SocialCounts>
+                    <li>
+                      <button>
+                        <img
+                          src='https://static-exp1.licdn.com/sc/h/8ekq8gho1ruaf8i7f86vd1ftt'
+                          alt='LIKE'
+                        />
 
-                    <img
-                      src='https://static-exp1.licdn.com/sc/h/b1dl5jk88euc7e9ri50xy5qo8'
-                      alt='PRAISE'
-                    />
+                        <img
+                          src='https://static-exp1.licdn.com/sc/h/b1dl5jk88euc7e9ri50xy5qo8'
+                          alt='PRAISE'
+                        />
 
-                    <img
-                      src='https://static-exp1.licdn.com/sc/h/cpho5fghnpme8epox8rdcds22'
-                      alt='EMPATHY'
-                    />
-                    <span>75</span>
-                  </button>
-                </li>
-                <li>
-                  <a>2 comments</a>
-                </li>
-              </SocialCounts>
-              <SocialActions>
-                <button>
-                  <img src='/images/like-icon.svg' alt='like-icon' />
-                  <span>Like</span>
-                </button>
-                <button>
-                  <img src='/images/comments-icon.svg' alt='comments-icon' />
-                  <span>Comments</span>
-                </button>
-                <button>
-                  <img src='/images/share-icon.svg' alt='share-icon' />
-                  <span>Share</span>
-                </button>
-                <button>
-                  <img src='/images/send-icon.svg' alt='send-icon' />
-                  <span>Send</span>
-                </button>
-              </SocialActions>
-            </Article>
+                        <img
+                          src='https://static-exp1.licdn.com/sc/h/cpho5fghnpme8epox8rdcds22'
+                          alt='EMPATHY'
+                        />
+                        <span>75</span>
+                      </button>
+                    </li>
+                    <li>
+                      <a>{article.comments}</a>
+                    </li>
+                  </SocialCounts>
+                  <SocialActions>
+                    <button>
+                      <img src='/images/like-icon.svg' alt='like-icon' />
+                      <span>Like</span>
+                    </button>
+                    <button>
+                      <img
+                        src='/images/comments-icon.svg'
+                        alt='comments-icon'
+                      />
+                      <span>Comments</span>
+                    </button>
+                    <button>
+                      <img src='/images/share-icon.svg' alt='share-icon' />
+                      <span>Share</span>
+                    </button>
+                    <button>
+                      <img src='/images/send-icon.svg' alt='send-icon' />
+                      <span>Send</span>
+                    </button>
+                  </SocialActions>
+                </Article>
+              ))}
           </Content>
           <PostModal showModal={showModal} handleClick={handleClick} />
         </Container>
@@ -314,6 +328,8 @@ const SocialCounts = styled.ul`
 
     button {
       display: flex;
+      border: none;
+      background-color: white;
     }
   }
 `;
@@ -330,6 +346,8 @@ const SocialActions = styled.div`
     align-items: center;
     padding: 8px;
     color: #0a66c2;
+    border: none;
+    background-color: white;
 
     @media (min-width: 768px) {
       span {
